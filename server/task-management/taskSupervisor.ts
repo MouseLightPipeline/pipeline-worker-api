@@ -174,6 +174,8 @@ export class TaskSupervisor implements ITaskSupervisor, ITaskUpdateDelegate {
                 await localTaskManager.startTask(taskExecution);
                 this._localTaskLoad += taskExecution.local_work_units;
             }
+
+            await taskExecution.save();
         } catch (err) {
             debug(err);
 

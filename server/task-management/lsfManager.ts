@@ -177,8 +177,6 @@ export class LSFTaskManager implements ITaskUpdateSource, ITaskManager {
                     taskExecution.job_id = parseInt(r[0]);
                     taskExecution.job_name = jobName;
 
-                    taskExecution.save().then();
-
                     debug(`submitted task id ${taskExecution.id} has job id ${taskExecution.job_id}`);
                 } catch (err) {
                     debug(err);
@@ -190,10 +188,14 @@ export class LSFTaskManager implements ITaskUpdateSource, ITaskManager {
             });
 
             submit.stderr.on("data", (data: Buffer) => {
-                debug("ssh login1 to submit error:");
+                debug(`ssh ${clusterHost} submission error:`);
                 debug(data.toString());
 
-                fs.appendFileSync(taskExecution.resolved_log_path + ".cluster.err.log", "ssh login1 to submit error:");
+                taskExecution.completed_at = new Date();
+                taskExecution.execution_status_code = ExecutionStatus.Completed;
+                taskExecution.completion_status_code = CompletionResult.Error;
+
+                fs.appendFileSync(taskExecution.resolved_log_path + ".cluster.err.log", `ssh ${clusterHost} submission error:`);
                 fs.appendFileSync(taskExecution.resolved_log_path + ".cluster.err.log", data.toString());
             });
 
@@ -207,8 +209,6 @@ export class LSFTaskManager implements ITaskUpdateSource, ITaskManager {
                     taskExecution.execution_status_code = ExecutionStatus.Completed;
                     taskExecution.completion_status_code = CompletionResult.Error;
                 }
-
-                taskExecution.save().then();
             });
         } catch (err) {
             debug(err);
@@ -216,8 +216,6 @@ export class LSFTaskManager implements ITaskUpdateSource, ITaskManager {
             taskExecution.completed_at = new Date();
             taskExecution.execution_status_code = ExecutionStatus.Completed;
             taskExecution.completion_status_code = CompletionResult.Error;
-
-            taskExecution.save().then();
         }
     }
 
