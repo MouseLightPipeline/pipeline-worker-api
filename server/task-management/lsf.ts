@@ -141,7 +141,7 @@ export function updateJobInfo(jobArray: string[]): Promise<IJobUpdate[]> {
             });
             */
 
-            exec(`ssh ${clusterHost} "bjobs -a -W ${jobArray.join(" ")}"`, {maxBuffer: 10000 * 400}, (error, stdout, stderr) => {
+            exec(`ssh ${clusterHost} "bjobs -a -W ${jobArray.join(" ")}"`, {maxBuffer: 32 * 1024 * 1024}, (error, stdout, stderr) => {
                 if (error) {
                     debug(error);
                     reject([]);

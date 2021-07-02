@@ -189,10 +189,6 @@ export class LSFTaskManager implements ITaskUpdateSource, ITaskManager {
 
                 fs.appendFileSync(taskExecution.resolved_log_path + ".cluster.err.log", `ssh ${clusterHost} submission error:`);
                 fs.appendFileSync(taskExecution.resolved_log_path + ".cluster.err.log", data.toString());
-
-                taskExecution.completed_at = new Date();
-                taskExecution.execution_status_code = ExecutionStatus.Completed;
-                taskExecution.completion_status_code = CompletionResult.Cancel;
             });
 
             submit.on("close", (code) => {

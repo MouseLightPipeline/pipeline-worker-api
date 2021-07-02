@@ -55,7 +55,7 @@ export class MainQueue {
             }
 
             if (this._channel) {
-                this._channel.sendToQueue(TaskExecutionCompleteQueue, new Buffer(JSON.stringify(taskExecution)), {persistent: true});
+                this._channel.sendToQueue(TaskExecutionCompleteQueue, Buffer.from(JSON.stringify(taskExecution)), {persistent: true});
             } else {
                 debug(`failed to send task execution complete ${taskExecution.id}`);
             }
@@ -72,7 +72,7 @@ export class MainQueue {
             }
 
             if (this._channel) {
-                this._channel.sendToQueue(TaskExecutionUpdateQueue, new Buffer(JSON.stringify(taskExecution)), {persistent: false});
+                this._channel.sendToQueue(TaskExecutionUpdateQueue, Buffer.from(JSON.stringify(taskExecution)), {persistent: false});
             } else {
                 debug(`failed to send task execution update ${taskExecution.id}`);
             }
